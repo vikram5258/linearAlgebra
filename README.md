@@ -23,9 +23,10 @@ let output = activation.apply(&vec![0.5]);
 
 [dependencies]
 linear_algebra = "0.1.0"
+```
 
-
-
+### Linear Algebra Operations
+```rust
 extern crate linear_algebra;
 
 let matrix_a = Matrix::rand(2, 3);
@@ -35,4 +36,5 @@ let network = Network::new(vec![2, 3, 1], Activation::new(), 0.1);
 network.train(vec![vec![0.0, 0.0], vec![0.0, 1.0], vec![1.0, 0.0], vec![1.0, 1.0]], vec![vec![0.0], vec![1.0], vec![1.0], vec![0.0]], 100);
 let activation = Activation::new_sigmoid();
 let output = activation.apply(&vec![0.5]);
+```
 I hope this helps! Let me know if you have any further questions.
