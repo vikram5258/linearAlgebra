@@ -4,8 +4,8 @@ pub struct Activation<'a> {
     pub derivative: &'a dyn Fn(f64) -> f64,
 }
 pub const SIGMOID: Activation = Activation {
-    function: &|x: f64| 1.0 / (1.0 + (-x).exp()), // sigmoid function: maps any real number to a value between 0 and 1. 1 / (1 + e^(-x)) = 1 / (1 + 1/e^x) = e^x / (e^x + 1)
-    derivative: &|x: f64| x * (1.0 - x), // derivative of sigmoid: x * (1 - x) = x - x^2. This is the gradient of the sigmoid function.
+    function: &|x: f64| 1.0 / (1.0 + (-x).exp()),
+    derivative: &|x: f64| x * (1.0 - x),
 };
 pub const TANH: Activation = Activation {
     function: &|x| (2.0 / (1.0 + (-x).exp())).sqrt() - 1.0,

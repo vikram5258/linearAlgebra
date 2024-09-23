@@ -56,35 +56,40 @@ impl Matrix {
         Matrix { rows, cols, data }
     }
     pub fn add(&self, other: &Matrix) -> Matrix {
-        assert!(self.rows == other.rows && self.cols == other.cols);
-        let mut data: Vec<Vec<f64>> = Matrix::zeros(self.rows, self.cols).data;
+        if self.rows != other.rows || self.cols != other.cols {
+            panic!("Attempted to add matrix of incorrect dimensions");
+        }
+
+        let mut res = Matrix::zeros(self.rows, self.cols);
+
         for i in 0..self.rows {
             for j in 0..self.cols {
-                data[i][j] = self.data[i][j] + other.data[i][j];
+                res.data[i][j] = self.data[i][j] + other.data[i][j];
             }
         }
-        Matrix {
-            rows: self.rows,
-            cols: self.cols,
-            data: data,
-        }
+
+        res
     }
+
     pub fn mult(&self, other: &Matrix) -> Matrix {
-        assert!(self.cols == other.rows);
-        let mut data: Vec<Vec<f64>> = Matrix::zeros(self.rows, other.cols).data;
+        if self.cols != other.rows {
+            panic!("Attempted to multiply by matrix of incorrect dimensions");
+        }
+
+        let mut res = Matrix::zeros(self.rows, other.cols);
 
         for i in 0..self.rows {
             for j in 0..other.cols {
+                let mut sum = 0.0;
                 for k in 0..self.cols {
-                    data[i][j] += self.data[i][k] * other.data[k][j];
+                    sum += self.data[i][k] * other.data[k][j];
                 }
+
+                res.data[i][j] = sum;
             }
         }
-        Matrix {
-            rows: self.rows,
-            cols: other.cols,
-            data: data,
-        }
+
+        res
     }
     pub fn from(data: Vec<Vec<f64>>) -> Matrix {
         let rows = data.len();
@@ -103,6 +108,35 @@ impl Matrix {
     pub fn len(&self) -> usize {
         self.data.len()
     }
+    pub fn sub(&self, other: &Matrix) -> Matrix {
+        assert!(self.rows == other.rows && self.cols == other.cols);
+        let mut data: Vec<Vec<f64>> = Matrix::zeros(self.rows, self.cols).data;
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                data[i][j] = self.data[i][j] - other.data[i][j];
+            }
+        }
+        Matrix {
+            rows: self.rows,
+            cols: self.cols,
+            data: data,
+        }
+    }
+    pub fn dot(&self, other: &Matrix) -> Matrix {
+        if self.rows != other.rows || self.cols != other.cols {
+            panic!("Attempted to dot multiply by matrix of incorrect dimensions");
+        }
+
+        let mut res = Matrix::zeros(self.rows, self.cols);
+
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                res.data[i][j] = self.data[i][j] * other.data[i][j];
+            }
+        }
+
+        res
+    }
     pub fn transpose(&self) -> Matrix {
         let mut data: Vec<Vec<f64>> = Matrix::zeros(self.cols, self.rows).data;
         for i in 0..self.rows {
@@ -116,12 +150,4 @@ impl Matrix {
             data: data,
         }
     }
-}
-
-pub fn main_print(m1: Matrix, m2: Matrix, m3: Matrix, m4: Matrix, m5: Matrix) {
-    println!("Matrix 1:\n{:?}", m1.data);
-    println!("Matrix 2:\n{:?}", m2.data);
-    println!("Matrix 3:\n{:?}", m3.data);
-    println!("Matrix 4:\n{:?}", m4.data);
-    println!("Matrix Product Of m3 and m4 is m5:\n{:?}", m5.data);
 }
